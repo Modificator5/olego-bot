@@ -1,1 +1,41 @@
+import os
+import vk_api
+from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
+import google.generativeai as genai
 
+# --- ПРОКСИ ДЛЯ БЕСПЛАТНОГО ТАРИФА ---
+os.environ['http_proxy'] = "http://proxy.server:3128"
+os.environ['https_proxy'] = "http://proxy.server:3128"
+
+# --- ТВОИ НАСТРОЙКИ ---
+VK_TOKEN = 'vk1.a.byPsm5s6ySB7k8S9YXRN7nKHB0qQchP6GBx-CJdVZmtFGYXfW-AR6_kLSaqTpmZcR6Zgrl4rIzPCx1EE8J-se-75ZjMPGw5-vukUH1B7rCVr7w6reNYUi1QEwF0hSQXvVMVmaVEve4aTU72vKMLVh_u7Ex-lm-cJlaqiTLKQScG8GZFNWCR0-yXC7W1Y3AlaOfsGw3h_bRer_vLnV7-vog'
+GROUP_ID = 236440291
+GEMINI_KEY = 'AIzaSyAJ7jRW7sO3fKEwNhn5Ur7ojW3lkNaLD8o'
+# ----------------------
+
+# Настройка Gemini
+genai.configure(api_key=GEMINI_KEY)
+model = genai.GenerativeModel('gemini-1.5-flash')
+
+# Настройка ВК
+vk_session = vk_api.VkApi(token=VK_TOKEN)
+vk = vk_session.get_api()
+longpoll = VkBotLongPoll(vk_session, GROUP_ID)
+
+print("ОлегоТест пройден. Мозги Gemini пришиты!")
+
+for event in longpoll.listen():
+    if event.type == VkBotEventType.MESSAGE_NEW and event.from_user:
+        user_id = event.obj.message['from_id']
+        text = event.obj.message['text']
+
+        # Инструкция для бота (Промпт)
+        prompt = f"Ты — эксперт из паблика JustieOff. Ты шаришь в железе, ненавидишь майнеры, шутишь про Александра с его 121 Вт на Ryzen 5600 и Матвея с его овсянкой. Отвечай кратко, с юмором и используй слово ОлегоТест. Вопрос пользователя: {text}"
+
+        try:
+            response = model.generate_content(prompt)
+            final_text = response.text
+        except:
+            final_text = "Мозги перегрелись, видать Матвей кабель перегрыз."
+
+        vk.messages.send(user_id=user_id, message=final_text, random_id=0)
