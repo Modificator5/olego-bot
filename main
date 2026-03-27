@@ -8,9 +8,9 @@ os.environ['http_proxy'] = "http://proxy.server:3128"
 os.environ['https_proxy'] = "http://proxy.server:3128"
 
 # --- ТВОИ НАСТРОЙКИ ---
-VK_TOKEN = 'vk1.a.byPsm5s6ySB7k8S9YXRN7nKHB0qQchP6GBx-CJdVZmtFGYXfW-AR6_kLSaqTpmZcR6Zgrl4rIzPCx1EE8J-se-75ZjMPGw5-vukUH1B7rCVr7w6reNYUi1QEwF0hSQXvVMVmaVEve4aTU72vKMLVh_u7Ex-lm-cJlaqiTLKQScG8GZFNWCR0-yXC7W1Y3AlaOfsGw3h_bRer_vLnV7-vog'
+VK_TOKEN = os.environ.get('VK_TOKEN')
 GROUP_ID = 236440291
-GEMINI_KEY = 'AIzaSyAJ7jRW7sO3fKEwNhn5Ur7ojW3lkNaLD8o'
+GEMINI_KEY = os.environ.get('GEMINI_KEY')
 # ----------------------
 
 # Настройка Gemini
